@@ -24,5 +24,19 @@ export const SkillService = {
 
     deleteSkill: async (id: number) => {
         return await SkillRepository.delete(id)
-    }
+    },
+
+    addSkillToLearn: async (userId: number, skillId: number) => {
+        return await SkillRepository.addToLearn(userId, skillId);
+      },
+    
+      // Remover uma skill da lista de "quero aprender" do usuário
+      removeSkillFromLearn: async (userId: number, skillId: number) => {
+        return await SkillRepository.removeFromLearn(userId, skillId);
+      },
+    
+      // Buscar as skills que o usuário quer aprender
+      getSkillsToLearn: async (userId: number) => {
+        return await SkillRepository.getSkillsToLearnByUser(userId);
+      }
 }

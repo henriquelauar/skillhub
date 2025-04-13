@@ -69,5 +69,46 @@ export const SkillController = {
     } catch (err: any) {
       res.status(500).json({ message: 'Erro ao deletar skill', error: err.message });
     }
+  },
+
+  addSkillToLearn: async (req: Request, res: Response): Promise<void> => {
+    const userId = Number(req.params.userId);
+    const skillId = Number(req.body.skillId);
+
+    try {
+      const updatedSkill = await SkillService.addSkillToLearn(userId, skillId);
+      res.status(200).json(updatedSkill);
+    } catch (err: any) {
+      res.status(500).json({ message: 'Erro ao adicionar skill para aprender', error: err.message });
+    }
+  },
+
+  // Remover skill da lista de "quero aprender" do usuário
+  removeSkillFromLearn: async (req: Request, res: Response): Promise<void> => {
+    const userId = Number(req.params.userId);
+    const skillId = Number(req.body.skillId);
+
+    try {
+      const updatedSkill = await SkillService.removeSkillFromLearn(userId, skillId);
+      res.status(200).json(updatedSkill);
+    } catch (err: any) {
+      res.status(500).json({ message: 'Erro ao remover skill da lista de aprender', error: err.message });
+    }
+  },
+
+  // Buscar as skills que o usuário quer aprender
+  getSkillsToLearn: async (req: Request, res: Response): Promise<void> => {
+    const userId = Number(req.params.userId);
+
+    try {
+      const skills = await SkillService.getSkillsToLearn(userId);
+      if (!skills) {
+        res.status(404).json({ message: 'Nenhuma skill encontrada para aprender' });
+        return;
+      }
+      res.json(skills.skillsToLearn);
+    } catch (err: any) {
+      res.status(500).json({ message: 'Erro ao buscar skills para aprender', error: err.message });
+    }
   }
 };

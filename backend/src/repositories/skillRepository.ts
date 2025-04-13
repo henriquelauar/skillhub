@@ -6,7 +6,7 @@ export const SkillRepository = {
         return prisma.skill.create({
             data: {
                 name: data.name,
-                user: {
+                owner: {
                     connect: { id: data.userId }
                 }
             }
@@ -22,7 +22,7 @@ export const SkillRepository = {
     },
 
     findByUserId: async (userId: number) => {
-        return prisma.skill.findMany({ where: { userId } });
+        return prisma.skill.findMany({ where: { ownerId: userId } });
     },
       
     update: async (id: number, data: UpdateSkill) => {
@@ -31,5 +31,36 @@ export const SkillRepository = {
 
     delete: async (id: number) => {
         return prisma.skill.delete({ where: { id }})
-    }
+    },
+
+    addToLearn: async (userId: number, skillId: number) => {
+        return prisma.skill.update({
+          where: { id: skillId },
+          data: {
+            learners: {
+              connect: { id: userId }
+            }
+          }
+        });
+      },
+    
+      removeFromLearn: async (userId: number, skillId: number) => {
+        return prisma.skill.update({
+          where: { id: skillId },
+          data: {
+            learners: {
+              disconnect: { id: userId }
+            }
+          }
+        });
+      },
+    
+      getSkillsToLearnByUser: async (userId: number) => {
+        return prisma.user.findUnique({
+          where: { id: userId },
+          include: {
+            skillsToLearn: true
+          }
+        });
+      }
 }

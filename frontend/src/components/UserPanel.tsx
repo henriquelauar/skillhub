@@ -18,7 +18,18 @@ const UserPanel = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [skillsToLearn, setSkillsToLearn] = useState<Skill[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId')
+    const fetchSkillsToLearn = async () => {
+      const response = await api.get(`/skills/to-learn/${userId}`);
+      setSkillsToLearn(response.data);
+    };
+  
+    fetchSkillsToLearn();
+  }, []);
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -112,6 +123,16 @@ const UserPanel = () => {
           </ul>
         )}
       </div>
+      <h3>Skills que deseja aprender</h3>
+      <ul className="list-group mb-3">
+        {skillsToLearn.length === 0 ? (
+          <li className="list-group-item">Nenhuma habilidade adicionada.</li>
+        ) : (
+          skillsToLearn.map(skill => (
+            <li className="list-group-item" key={skill.id}>{skill.name}</li>
+          ))
+        )}
+      </ul>
     </div>
   );
 };
