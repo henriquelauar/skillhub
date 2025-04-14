@@ -42,8 +42,8 @@ export const SkillController = {
       const skills = await SkillService.getSkillsByUserId(userId);
             
       if (!skills.length) {
-        res.status(404).json({ message: 'Nenhuma skill encontrada para este usuário' });
-        return;
+        res.status(200).json([]);
+        return
       }
 
       res.json(skills);
