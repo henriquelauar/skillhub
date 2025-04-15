@@ -3,7 +3,7 @@ import { CreateSkill, UpdateSkill } from "../types/skillTypes";
 
 export const SkillService = {
     createSkill: async (data: CreateSkill) => {
-        const existingSkill = await SkillRepository.findByNameAndUserAndType(data.name, data. userId, false);
+        const existingSkill = await SkillRepository.findByNameAndUser(data.name, data.userId);
         if (existingSkill) {
             throw new Error('Você já cadastrou uma habilidade com esse nome.')
         } else {
@@ -32,7 +32,7 @@ export const SkillService = {
     },
 
     createLearningSkill: async (data: CreateSkill) => {
-        const existingSkill = await SkillRepository.findByNameAndUserAndType(data.name, data.userId, false);
+        const existingSkill = await SkillRepository.findByNameAndUser(data.name, data.userId);
         if (existingSkill) {
             throw new Error("Você já adicionou uma habilidade com esse nome")
         } else {

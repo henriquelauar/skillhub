@@ -5,7 +5,6 @@ import { getOwnedSkills, getSkillsToLearn, deleteSkill } from '../services/skill
 import { Skill, UserData } from '../types';
 import { getUserId, logout } from '../utils/auth';
 import SkillForm from './SkillForm';
-import WantToLearnForm from './WantToLearn';
 
 const Dashboard = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -24,16 +23,16 @@ const Dashboard = () => {
 
     const fetchData = async () => {
       try {
-        const [user, userSkills, skillsToLearn] = await Promise.all([
+        const [user, owned, toLearn] = await Promise.all([
           getUserById(userId),
           getOwnedSkills(userId),
           getSkillsToLearn(userId),
         ]);
         setUserData(user);
-        setSkills(userSkills);
-        setSkillsToLearn(skillsToLearn);
+        setSkills(owned);
+        setSkillsToLearn(toLearn);
       } catch (err) {
-        setError('Erro ao carregar dados do usuário');
+        setError('Erro ao carregar dados');
         console.error(err);
       }
     };
@@ -44,22 +43,26 @@ const Dashboard = () => {
   const handleSkillAdded = async () => {
     if (!userId) return;
     try {
-      const updatedSkills = await getOwnedSkills(userId);
-      setSkills(updatedSkills);
+      const [owned, toLearn] = await Promise.all([
+        getOwnedSkills(userId),
+        getSkillsToLearn(userId),
+      ]);
+      setSkills(owned);
+      setSkillsToLearn(toLearn);
     } catch (err) {
-      setError('Erro ao atualizar a lista de skills');
+      setError('Erro ao atualizar listas');
       console.error(err);
     }
   };
 
   const handleDeleteSkill = async (skillId: number) => {
-    if (!userId) return;
     try {
       await deleteSkill(skillId);
-      setSkills(skills.filter(skill => skill.id !== skillId));
+      setSkills(prev => prev.filter(skill => skill.id !== skillId));
+      setSkillsToLearn(prev => prev.filter(skill => skill.id !== skillId));
     } catch (err) {
       setError('Erro ao excluir skill');
-      console.error(err);
+      console.log(err);
     }
   };
 
@@ -72,44 +75,47 @@ const Dashboard = () => {
   if (!userData) return <div className="alert alert-info">Carregando...</div>;
 
   return (
-    <div className="container" style={{ maxWidth: '800px', marginTop: '50px' }}>
-      <div className="card p-4">
-        <div>
-          <button onClick={handleLogout} className="btn btn-danger btn-sm mb-4">
-            Logout
-          </button>
-        </div>
-        <SkillForm onSkillAdded={handleSkillAdded} />
-        <h3 className="mt-4">Suas Skills</h3>
-        {skills.length === 0 ? (
-          <p>Nenhuma skill cadastrada.</p>
-        ) : (
-          <ul className="list-group">
-            {skills.map(skill => (
-              <li key={skill.id} className="list-group-item d-flex justify-content-between align-items-center">
-                {skill.name}
-                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteSkill(skill.id)}>
-                  Excluir
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+    <div className="container mt-5">
+      <div className='d-flex justify-content-between align-items-center mb-4'>
+        <h3>Bem-vindo, {userData.name}</h3>
+        <button onClick={handleLogout} className="btn btn-danger btn-sm">Logout</button>
       </div>
 
-      <h3 className="mt-4">Skills que deseja aprender</h3>
-      <ul className="list-group mb-3">
-        {skillsToLearn.length === 0 ? (
-          <li className="list-group-item">Nenhuma habilidade adicionada.</li>
-        ) : (
-          skillsToLearn.map(skill => (
-            <li className="list-group-item" key={skill.id}>
-              {skill.name}
-            </li>
-          ))
-        )}
-      </ul>
-        <WantToLearnForm/>
+      <SkillForm onSkillAdded={handleSkillAdded} />
+
+      <div className="row mt-4">
+        <div className="col-md-6">
+          <h4>Habilidades que Quero Ensinar</h4>
+          {skills.length === 0 ? (
+            <p>Nenhuma habilidade cadastrada.</p>
+          ) : (
+            <ul className="list-group">
+              {skills.map(skill => (
+                <li key={skill.id} className="list-group-item d-flex justify-content-between">
+                  {skill.name}
+                  <button className="btn btn-sm btn-danger" onClick={() => handleDeleteSkill(skill.id)}>Excluir</button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="col-md-6">
+          <h4>Habilidades que Quero Aprender</h4>
+          {skillsToLearn.length === 0 ? (
+            <p>Nenhuma habilidade cadastrada.</p>
+          ) : (
+            <ul className="list-group">
+              {skillsToLearn.map(skill => (
+                <li key={skill.id} className="list-group-item d-flex justify-content-between">
+                  {skill.name}
+                  <button className="btn btn-sm btn-danger" onClick={() => handleDeleteSkill(skill.id)}>Excluir</button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,74 +1,77 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import api from '../services/api';
 import { SkillFormProps } from '../types';
 
-const SkillForm = ({ skillToEdit, onSkillAdded }: SkillFormProps) => {
+const SkillForm = ({ onSkillAdded }: SkillFormProps) => {
   const [skillName, setSkillName] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [skillType, setSkillType] = useState('queroEnsinar');
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  useEffect(() => {
-    if (skillToEdit) {
-      setSkillName(skillToEdit.name);
-    }
-  }, [skillToEdit]);
-
-  const handleAddOrUpdateSkill = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const userId = localStorage.getItem('userId');
-    if (!userId) {
-      setError('Usuário não autenticado');
-      return;
-    }
+
+    if (!userId) return setMessage({ type: 'error', text: 'Usuário não autenticado' });
 
     try {
-      if (skillToEdit) {
-        await api.put(`/skills/${skillToEdit.id}`, {
-          name: skillName,
-          userId: Number(userId),
-        });
-        setSuccess('Habilidade atualizada com sucesso!');
-      } else {
+      if (skillType === 'queroEnsinar') {
         await api.post('/skills', {
           name: skillName,
           userId: Number(userId),
         });
-        setSuccess('Habilidade adicionada com sucesso!');
+      } else {
+        await api.post(`/skills/to-learn/${userId}`, {
+          name: skillName,
+          userId: Number(userId),
+        });
       }
-
       setSkillName('');
-      setError(null);
+      setMessage({ type: 'success', text: 'Habilidade adicionada com sucesso!' });
       onSkillAdded();
     } catch (err) {
-      setError('Erro ao adicionar/atualizar skill');
-      setSuccess(null);
-      console.log(err);
+      setMessage({ type: 'error', text: 'Erro ao adicionar habilidade' });
+      console.error(err);
     }
   };
 
   return (
-    <div>
-      <h3>{skillToEdit ? 'Editar Habilidade' : 'Adicionar Habilidade'}</h3>
-      {error && <p className="text-danger">{error}</p>}
-      {success && <p className="text-success">{success}</p>}
-      <form onSubmit={handleAddOrUpdateSkill}>
-      <div className='input-group'>
-        <input 
-          type="text" 
-          value={skillName} 
-          onChange={(e) => setSkillName(e.target.value)} 
-          placeholder="Nome da habilidade" 
-          required 
-          className="form-control"
-        />
-        <button type="submit" className="btn btn-primary">
-          {skillToEdit ? 'Atualizar' : 'Adicionar'}
-        </button>
+    <form onSubmit={handleSubmit} className="mb-4">
+      <div className="row g-2 align-items-center">
+        <div className="col-md-6">
+          <input
+            type="text"
+            className="form-control shadow-sm"
+            placeholder="Nome da habilidade"
+            value={skillName}
+            onChange={(e) => setSkillName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="col-md-3">
+          <select
+            className="form-select shadow-sm"
+            value={skillType}
+            onChange={(e) => setSkillType(e.target.value)}
+          >
+            <option value="domino">Quero ensinar</option>
+            <option value="aprender">Quero aprender</option>
+          </select>
+        </div>
+        <div className="col-md-2">
+          <button type="submit" className="btn btn-primary w-100 shadow-sm">
+            Adicionar
+          </button>
+        </div>
       </div>
-      </form>
-    </div>
+      
+      {message && (
+        <div className={`mt-3 fw-medium text-${message.type === 'success' ? 'success' : 'danger'}`}>
+          {message.text}
+        </div>
+      )}
+    </form>
   );
+  
 };
 
 export default SkillForm;

@@ -63,12 +63,11 @@ export const SkillRepository = {
       });
     },
 
-    findByNameAndUserAndType: async (name: string, userId: number, isLearning: boolean) => {
+    findByNameAndUser: async (name: string, userId: number) => {
       return prisma.skill.findFirst({
         where: {
           name,
           ownerId: userId,
-          isLearning
         }
       });
     },
