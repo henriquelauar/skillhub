@@ -1,75 +1,22 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getUserById } from '../services/userService';
-import { getOwnedSkills, getSkillsToLearn, deleteSkill } from '../services/skillService';
-import { Skill, UserData } from '../types';
-import { getUserId, logout } from '../utils/auth';
+// src/components/Dashboard.tsx
 import SkillForm from './SkillForm';
+import EditSkillModal from './EditSkillModal';
+import { useDashboard } from './useDashboard';
 
 const Dashboard = () => {
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [skillsToLearn, setSkillsToLearn] = useState<Skill[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-
-  const userId = getUserId();
-
-  useEffect(() => {
-    if (!userId) {
-      setError('Usuário não está logado.');
-      return;
-    }
-
-    const fetchData = async () => {
-      try {
-        const [user, owned, toLearn] = await Promise.all([
-          getUserById(userId),
-          getOwnedSkills(userId),
-          getSkillsToLearn(userId),
-        ]);
-        setUserData(user);
-        setSkills(owned);
-        setSkillsToLearn(toLearn);
-      } catch (err) {
-        setError('Erro ao carregar dados');
-        console.error(err);
-      }
-    };
-
-    fetchData();
-  }, [userId]);
-
-  const handleSkillAdded = async () => {
-    if (!userId) return;
-    try {
-      const [owned, toLearn] = await Promise.all([
-        getOwnedSkills(userId),
-        getSkillsToLearn(userId),
-      ]);
-      setSkills(owned);
-      setSkillsToLearn(toLearn);
-    } catch (err) {
-      setError('Erro ao atualizar listas');
-      console.error(err);
-    }
-  };
-
-  const handleDeleteSkill = async (skillId: number) => {
-    try {
-      await deleteSkill(skillId);
-      setSkills(prev => prev.filter(skill => skill.id !== skillId));
-      setSkillsToLearn(prev => prev.filter(skill => skill.id !== skillId));
-    } catch (err) {
-      setError('Erro ao excluir skill');
-      console.log(err);
-    }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const {
+    userData,
+    error,
+    skills,
+    skillsToLearn,
+    isModalOpen,
+    editingSkill,
+    setIsModalOpen,
+    setEditingSkill,
+    handleLogout,
+    handleDeleteSkill,
+    handleSkillAdded,
+  } = useDashboard();
 
   if (error) return <div className="alert alert-danger">{error}</div>;
   if (!userData) return <div className="alert alert-info">Carregando...</div>;
@@ -83,6 +30,14 @@ const Dashboard = () => {
 
       <SkillForm onSkillAdded={handleSkillAdded} />
 
+      {isModalOpen && (
+        <EditSkillModal
+          skill={editingSkill}
+          onClose={() => setIsModalOpen(false)}
+          onUpdate={handleSkillAdded}
+        />
+      )}
+
       <div className="row mt-4">
         <div className="col-md-6">
           <h4>Habilidades que Quero Ensinar</h4>
@@ -93,7 +48,12 @@ const Dashboard = () => {
               {skills.map(skill => (
                 <li key={skill.id} className="list-group-item d-flex justify-content-between">
                   {skill.name}
-                  <button className="btn btn-sm btn-danger" onClick={() => handleDeleteSkill(skill.id)}>Excluir</button>
+                  <div>
+                    <button className="btn btn-primary btn-sm me-2" onClick={() => { setEditingSkill(skill); setIsModalOpen(true); }}>
+                      Editar
+                    </button>
+                    <button className="btn btn-sm btn-danger" onClick={() => handleDeleteSkill(skill.id)}>Excluir</button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -109,7 +69,12 @@ const Dashboard = () => {
               {skillsToLearn.map(skill => (
                 <li key={skill.id} className="list-group-item d-flex justify-content-between">
                   {skill.name}
-                  <button className="btn btn-sm btn-danger" onClick={() => handleDeleteSkill(skill.id)}>Excluir</button>
+                  <div>
+                    <button className="btn btn-primary btn-sm me-2" onClick={() => { setEditingSkill(skill); setIsModalOpen(true); }}>
+                      Editar
+                    </button>
+                    <button className="btn btn-sm btn-danger" onClick={() => handleDeleteSkill(skill.id)}>Excluir</button>
+                  </div>
                 </li>
               ))}
             </ul>
