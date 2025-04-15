@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-
-interface Skill {
-  id: number;
-  name: string;
-}
-
-interface SkillFormProps {
-  skillToEdit?: Skill;
-  onSkillAdded: () => void;
-}
+import { SkillFormProps } from '../types';
 
 const SkillForm = ({ skillToEdit, onSkillAdded }: SkillFormProps) => {
   const [skillName, setSkillName] = useState('');
@@ -33,14 +24,12 @@ const SkillForm = ({ skillToEdit, onSkillAdded }: SkillFormProps) => {
 
     try {
       if (skillToEdit) {
-        // Atualizando a skill existente
         await api.put(`/skills/${skillToEdit.id}`, {
           name: skillName,
           userId: Number(userId),
         });
         setSuccess('Habilidade atualizada com sucesso!');
       } else {
-        // Adicionando nova skill
         await api.post('/skills', {
           name: skillName,
           userId: Number(userId),
@@ -50,7 +39,7 @@ const SkillForm = ({ skillToEdit, onSkillAdded }: SkillFormProps) => {
 
       setSkillName('');
       setError(null);
-      onSkillAdded();  // Atualiza a lista de skills
+      onSkillAdded();
     } catch (err) {
       setError('Erro ao adicionar/atualizar skill');
       setSuccess(null);
@@ -64,6 +53,7 @@ const SkillForm = ({ skillToEdit, onSkillAdded }: SkillFormProps) => {
       {error && <p className="text-danger">{error}</p>}
       {success && <p className="text-success">{success}</p>}
       <form onSubmit={handleAddOrUpdateSkill}>
+      <div className='input-group'>
         <input 
           type="text" 
           value={skillName} 
@@ -72,9 +62,10 @@ const SkillForm = ({ skillToEdit, onSkillAdded }: SkillFormProps) => {
           required 
           className="form-control"
         />
-        <button type="submit" className="btn btn-primary mt-2">
+        <button type="submit" className="btn btn-primary">
           {skillToEdit ? 'Atualizar' : 'Adicionar'}
         </button>
+      </div>
       </form>
     </div>
   );

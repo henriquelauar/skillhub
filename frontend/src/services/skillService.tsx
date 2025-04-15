@@ -1,7 +1,7 @@
 import api from './api';
 
-export const getUserSkills = async (userId: number) => {
-  const response = await api.get(`/skills/user/${userId}`);
+export const getOwnedSkills = async (userId: number) => {
+  const response = await api.get(`/skills/owned/${userId}`);
   return response.data;
 };
 

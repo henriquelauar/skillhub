@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../services/userService';
-import { getUserSkills, getSkillsToLearn, deleteSkill } from '../services/skillService';
+import { getOwnedSkills, getSkillsToLearn, deleteSkill } from '../services/skillService';
 import { Skill, UserData } from '../types';
 import { getUserId, logout } from '../utils/auth';
-import SkillForm from '../components/SkillForm';
+import SkillForm from './SkillForm';
+import WantToLearnForm from './WantToLearn';
 
-const UserPanel = () => {
+const Dashboard = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [skillsToLearn, setSkillsToLearn] = useState<Skill[]>([]);
@@ -25,7 +26,7 @@ const UserPanel = () => {
       try {
         const [user, userSkills, skillsToLearn] = await Promise.all([
           getUserById(userId),
-          getUserSkills(userId),
+          getOwnedSkills(userId),
           getSkillsToLearn(userId),
         ]);
         setUserData(user);
@@ -43,7 +44,7 @@ const UserPanel = () => {
   const handleSkillAdded = async () => {
     if (!userId) return;
     try {
-      const updatedSkills = await getUserSkills(userId);
+      const updatedSkills = await getOwnedSkills(userId);
       setSkills(updatedSkills);
     } catch (err) {
       setError('Erro ao atualizar a lista de skills');
@@ -78,7 +79,6 @@ const UserPanel = () => {
             Logout
           </button>
         </div>
-        <h2 className="text-center mb-4">Bem-vindo, {userData.name}!</h2>
         <SkillForm onSkillAdded={handleSkillAdded} />
         <h3 className="mt-4">Suas Skills</h3>
         {skills.length === 0 ? (
@@ -109,8 +109,9 @@ const UserPanel = () => {
           ))
         )}
       </ul>
+        <WantToLearnForm/>
     </div>
   );
 };
 
-export default UserPanel;
+export default Dashboard;

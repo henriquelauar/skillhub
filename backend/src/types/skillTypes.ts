@@ -13,4 +13,3 @@ export interface Skill {
   export interface UpdateSkill {
     name?: string;
   }
-  

@@ -3,7 +3,12 @@ import { CreateSkill, UpdateSkill } from "../types/skillTypes";
 
 export const SkillService = {
     createSkill: async (data: CreateSkill) => {
-        return await SkillRepository.create(data)
+        const existingSkill = await SkillRepository.findByNameAndUserAndType(data.name, data. userId, false);
+        if (existingSkill) {
+            throw new Error('Você já cadastrou uma habilidade com esse nome.')
+        } else {
+            return await SkillRepository.create(data)
+        }
     },
 
     getAllSkills: async () => {
@@ -26,17 +31,25 @@ export const SkillService = {
         return await SkillRepository.delete(id)
     },
 
-    addSkillToLearn: async (userId: number, skillId: number) => {
-        return await SkillRepository.addToLearn(userId, skillId);
-      },
-    
-      // Remover uma skill da lista de "quero aprender" do usuário
-      removeSkillFromLearn: async (userId: number, skillId: number) => {
+    createLearningSkill: async (data: CreateSkill) => {
+        const existingSkill = await SkillRepository.findByNameAndUserAndType(data.name, data.userId, false);
+        if (existingSkill) {
+            throw new Error("Você já adicionou uma habilidade com esse nome")
+        } else {
+            return await SkillRepository.createLearningSkill(data);
+        }
+
+    },
+
+    removeSkillFromLearn: async (userId: number, skillId: number) => {
         return await SkillRepository.removeFromLearn(userId, skillId);
-      },
-    
-      // Buscar as skills que o usuário quer aprender
-      getSkillsToLearn: async (userId: number) => {
+    },
+
+    getSkillsToLearn: async (userId: number) => {
         return await SkillRepository.getSkillsToLearnByUser(userId);
-      }
+    },
+
+    getSkillsOwned: async (userId: number) => {
+        return await SkillRepository.getSkillsOwnedByUser(userId);
+    }
 }

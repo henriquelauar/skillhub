@@ -14,26 +14,21 @@ datasource db {
 }
 
 model Skill {
-  id        Int       @id @default(autoincrement())
-  name      String
-  createdAt DateTime  @default(now())
+  id         Int       @id @default(autoincrement())
+  name       String
+  createdAt  DateTime  @default(now())
 
-  ownerId   Int
-  owner     User      @relation("OwnedSkills", fields: [ownerId], references: [id])
-
-  learners  User[]    @relation("SkillsToLearn")
+  isLearning Boolean   @default(false)
+  ownerId    Int
+  owner      User      @relation("OwnedSkills", fields: [ownerId], references: [id])
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  name          String
-  email         String    @unique
-  password      String
-  createdAt     DateTime  @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
 
-  // Relação 1:N: usuário é dono de várias skills
-  skills        Skill[]   @relation("OwnedSkills")
-
-  // Relação N:N: usuário quer aprender várias skills
-  skillsToLearn Skill[]   @relation("SkillsToLearn")
+  skills    Skill[]   @relation("OwnedSkills")
 }

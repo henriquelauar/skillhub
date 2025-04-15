@@ -15,7 +15,7 @@ const WantToLearnForm = () => {
     if (!userId) return setError('Usuário não autenticado');
 
     try {
-      await api.post('/skills/to-learn', {
+      await api.post(`/skills/to-learn/${userId}`, {
         name: skillName,
         userId: Number(userId),
       });

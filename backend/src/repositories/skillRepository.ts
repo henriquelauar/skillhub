@@ -33,34 +33,52 @@ export const SkillRepository = {
         return prisma.skill.delete({ where: { id }})
     },
 
-    addToLearn: async (userId: number, skillId: number) => {
-        return prisma.skill.update({
-          where: { id: skillId },
+    createLearningSkill: async (data: CreateSkill) => {
+        return await prisma.skill.create({
           data: {
-            learners: {
-              connect: { id: userId }
+            name: data.name,
+            isLearning: true,
+            owner: {
+              connect: { id: data.userId },
             }
           }
         });
-      },
+      },   
     
-      removeFromLearn: async (userId: number, skillId: number) => {
-        return prisma.skill.update({
-          where: { id: skillId },
-          data: {
-            learners: {
-              disconnect: { id: userId }
-            }
-          }
-        });
-      },
-    
-      getSkillsToLearnByUser: async (userId: number) => {
-        return prisma.user.findUnique({
-          where: { id: userId },
-          include: {
-            skillsToLearn: true
-          }
-        });
-      }
+    removeFromLearn: async (userId: number, skillId: number) => {
+      return prisma.skill.delete({
+        where: {
+          id: skillId,
+          ownerId: userId
+        }
+      })
+    },
+  
+    getSkillsToLearnByUser: async (userId: number) => {
+      return prisma.skill.findMany({
+        where: {
+          ownerId: userId,
+          isLearning: true
+        }
+      });
+    },
+
+    findByNameAndUserAndType: async (name: string, userId: number, isLearning: boolean) => {
+      return prisma.skill.findFirst({
+        where: {
+          name,
+          ownerId: userId,
+          isLearning
+        }
+      });
+    },
+
+    getSkillsOwnedByUser: async (userId: number) => {
+      return prisma.skill.findMany({
+        where: {
+          ownerId: userId,
+          isLearning: false
+        }
+      })
+    }
 }

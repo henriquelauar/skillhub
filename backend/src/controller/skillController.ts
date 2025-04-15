@@ -9,6 +9,11 @@ export const SkillController = {
       const skill = await SkillService.createSkill(req.body);
       res.status(201).json(skill);
     } catch (err: any) {
+      if (err.message.includes('habilidade que domina')) {
+        res.status(409).json({ message: err.message });
+        return;
+      }
+  
       res.status(500).json({ message: 'Erro ao criar skill', error: err.message });
     }
   },
@@ -71,32 +76,31 @@ export const SkillController = {
     }
   },
 
-  addSkillToLearn: async (req: Request, res: Response): Promise<void> => {
+  createLearningSkill: async (req: Request, res: Response): Promise<void> => {
     const userId = Number(req.params.userId);
-    const skillId = Number(req.body.skillId);
+    const { name } = req.body;
+    const data = {userId, name}
 
     try {
-      const updatedSkill = await SkillService.addSkillToLearn(userId, skillId);
-      res.status(200).json(updatedSkill);
+      const newSkill = await SkillService.createLearningSkill(data);
+      res.status(200).json(newSkill);
     } catch (err: any) {
       res.status(500).json({ message: 'Erro ao adicionar skill para aprender', error: err.message });
     }
   },
 
-  // Remover skill da lista de "quero aprender" do usuário
   removeSkillFromLearn: async (req: Request, res: Response): Promise<void> => {
     const userId = Number(req.params.userId);
     const skillId = Number(req.body.skillId);
 
     try {
-      const updatedSkill = await SkillService.removeSkillFromLearn(userId, skillId);
-      res.status(200).json(updatedSkill);
+      await SkillService.removeSkillFromLearn(userId, skillId);
+      res.status(204).send();
     } catch (err: any) {
       res.status(500).json({ message: 'Erro ao remover skill da lista de aprender', error: err.message });
     }
   },
 
-  // Buscar as skills que o usuário quer aprender
   getSkillsToLearn: async (req: Request, res: Response): Promise<void> => {
     const userId = Number(req.params.userId);
 
@@ -106,9 +110,24 @@ export const SkillController = {
         res.status(404).json({ message: 'Nenhuma skill encontrada para aprender' });
         return;
       }
-      res.json(skills.skillsToLearn);
+      res.json(skills);
     } catch (err: any) {
       res.status(500).json({ message: 'Erro ao buscar skills para aprender', error: err.message });
+    }
+  },
+
+  getSkillsOwned: async (req: Request, res: Response): Promise<void> => {
+    const userId = Number(req.params.userId);
+
+    try {
+      const skills = await SkillService.getSkillsOwned(userId);
+      if (!skills) {
+        res.status(404).json({ message: "Nenhuma skill encontrada" });
+        return;
+      }
+      res.json(skills)
+    } catch (err: any) {
+      res.status(500).json({ message: 'Erro ao buscar skills', error: err.message });
     }
   }
 };
