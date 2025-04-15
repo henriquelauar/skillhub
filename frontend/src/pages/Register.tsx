@@ -26,7 +26,7 @@ const Register = () => {
 
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-      <div className="card p-4" style={{ width: '100%', maxWidth: '400px' }}>
+      <div className="card-dark p-4" style={{ width: '100%', maxWidth: '400px' }}>
         <h2 className="text-center mb-4">Cadastro</h2>
         {error && <p className="text-danger">{error}</p>}
         <form onSubmit={handleRegister}>

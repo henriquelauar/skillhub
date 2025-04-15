@@ -31,22 +31,22 @@ const EditSkillModal = ({ skill, onClose, onUpdate }: Props) => {
     if (!skill) return null;
 
     return (
-        <div className="modal show d-block" style={{ backgroundColor: '#000000aa' }}>
-          <div className="modal-dialog">
-            <div className="modal-content p-3">
-              <h5>Editar Skill</h5>
-              <input
-                className="form-control mb-2"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <div className="d-flex justify-content-end">
-                <button className="btn btn-secondary me-2" onClick={onClose}>Cancelar</button>
-                <button className="btn btn-primary" onClick={handleUpdate}>Salvar</button>
-              </div>
+      <div className="modal show d-block" style={{ backgroundColor: '#000000aa' }}>
+        <div className="modal-dialog">
+          <div className="modal-content p-3" style={{ backgroundColor: '#1e1e1e', color: '#fff' }}>
+            <h5>Editar Skill</h5>
+            <input
+              className="form-control mb-2"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <div className="d-flex justify-content-end">
+              <button className="btn btn-secondary me-2" onClick={onClose}>Cancelar</button>
+              <button className="btn btn-primary" onClick={handleUpdate}>Salvar</button>
             </div>
           </div>
         </div>
+      </div>
       );
 }
 

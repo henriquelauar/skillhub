@@ -23,8 +23,8 @@ const Dashboard = () => {
 
   return (
     <div className="container mt-5">
-      <div className='d-flex justify-content-between align-items-center mb-4'>
-        <h3>Bem-vindo, {userData.name}</h3>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="fw-bold">Bem-vindo, {userData.name}</h3>
         <button onClick={handleLogout} className="btn btn-danger btn-sm">Logout</button>
       </div>
 
@@ -40,45 +40,49 @@ const Dashboard = () => {
 
       <div className="row mt-4">
         <div className="col-md-6">
-          <h4>Habilidades que Quero Ensinar</h4>
-          {skills.length === 0 ? (
-            <p>Nenhuma habilidade cadastrada.</p>
-          ) : (
-            <ul className="list-group">
-              {skills.map(skill => (
-                <li key={skill.id} className="list-group-item d-flex justify-content-between">
-                  {skill.name}
-                  <div>
-                    <button className="btn btn-primary btn-sm me-2" onClick={() => { setEditingSkill(skill); setIsModalOpen(true); }}>
-                      Editar
-                    </button>
-                    <button className="btn btn-sm btn-danger" onClick={() => handleDeleteSkill(skill.id)}>Excluir</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="card-dark mb-4">
+            <h4>Habilidades que Quero Ensinar</h4>
+            {skills.length === 0 ? (
+              <p>Nenhuma habilidade cadastrada.</p>
+            ) : (
+              <ul className="list-group list-group-flush">
+                {skills.map(skill => (
+                  <li key={skill.id} className="list-group-item bg-transparent text-white d-flex justify-content-between align-items-center border-0">
+                    {skill.name}
+                    <div>
+                      <button className="btn btn-primary btn-sm me-2" onClick={() => { setEditingSkill(skill); setIsModalOpen(true); }}>
+                        Editar
+                      </button>
+                      <button className="btn btn-danger btn-sm" onClick={() => handleDeleteSkill(skill.id)}>Excluir</button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
 
         <div className="col-md-6">
-          <h4>Habilidades que Quero Aprender</h4>
-          {skillsToLearn.length === 0 ? (
-            <p>Nenhuma habilidade cadastrada.</p>
-          ) : (
-            <ul className="list-group">
-              {skillsToLearn.map(skill => (
-                <li key={skill.id} className="list-group-item d-flex justify-content-between">
-                  {skill.name}
-                  <div>
-                    <button className="btn btn-primary btn-sm me-2" onClick={() => { setEditingSkill(skill); setIsModalOpen(true); }}>
-                      Editar
-                    </button>
-                    <button className="btn btn-sm btn-danger" onClick={() => handleDeleteSkill(skill.id)}>Excluir</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="card-dark mb-4">
+            <h4>Habilidades que Quero Aprender</h4>
+            {skillsToLearn.length === 0 ? (
+              <p>Nenhuma habilidade cadastrada.</p>
+            ) : (
+              <ul className="list-group list-group-flush">
+                {skillsToLearn.map(skill => (
+                  <li key={skill.id} className="list-group-item bg-transparent text-white d-flex justify-content-between align-items-center border-0">
+                    {skill.name}
+                    <div>
+                      <button className="btn btn-primary btn-sm me-2" onClick={() => { setEditingSkill(skill); setIsModalOpen(true); }}>
+                        Editar
+                      </button>
+                      <button className="btn btn-danger btn-sm" onClick={() => handleDeleteSkill(skill.id)}>Excluir</button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
     </div>

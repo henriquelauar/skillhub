@@ -22,7 +22,7 @@ const Login = () => {
 
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-      <div className="card p-4" style={{ width: '100%', maxWidth: '400px' }}>
+      <div className="card-dark p-4" style={{ width: '100%', maxWidth: '400px' }}>
         <h2 className="text-center mb-4">Login</h2>
         {error && <p className="text-danger">{error}</p>}
         <form onSubmit={handleLogin}>
@@ -52,7 +52,7 @@ const Login = () => {
           </div>
           <button type="submit" className="btn btn-primary w-100">Entrar</button>
         </form>
-        <p>Não tem uma conta? <a href="/register">Registre-se</a></p>
+        <p className='mt-4'>Não tem uma conta? <a href="/register">Registre-se</a></p>
       </div>
     </div>
   );
