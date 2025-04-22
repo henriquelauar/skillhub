@@ -20,7 +20,9 @@ model Skill {
 
   isLearning Boolean   @default(false)
   ownerId    Int
-  owner      User      @relation("OwnedSkills", fields: [ownerId], references: [id])
+  owner      User      @relation("OwnedSkills", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  matches    Match[]
 }
 
 model User {
@@ -31,4 +33,29 @@ model User {
   createdAt DateTime  @default(now())
 
   skills    Skill[]   @relation("OwnedSkills")
+  sentMatches     Match[] @relation("SenderMatches")   // Matches enviados
+  receivedMatches Match[] @relation("ReceiverMatches") // Matches recebidos
+}
+
+model Match {
+  id         String   @id @default(uuid())
+
+  senderId   Int
+  sender     User     @relation("SenderMatches", fields: [senderId], references: [id])
+
+  receiverId Int
+  receiver   User     @relation("ReceiverMatches", fields: [receiverId], references: [id])
+
+  skillId    Int
+  skill      Skill    @relation(fields: [skillId], references: [id])
+
+  status     MatchStatus @default(PENDENTE)
+  createdAt  DateTime @default(now())
+}
+
+
+enum MatchStatus {
+  PENDENTE
+  ACEITO
+  RECUSADO
 }

@@ -24,6 +24,27 @@ export const SkillRepository = {
     findByUserId: async (userId: number) => {
         return prisma.skill.findMany({ where: { ownerId: userId } });
     },
+
+    findByName: async (name: string) => {
+      return prisma.skill.findMany({
+        where: {
+          name: {
+            contains: name,
+            mode: 'insensitive'
+          },
+          isLearning: false
+        },
+        include: {
+          owner: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        },
+      });    
+    },
       
     update: async (id: number, data: UpdateSkill) => {
         return prisma.skill.update({ where: { id }, data })
@@ -79,5 +100,42 @@ export const SkillRepository = {
           isLearning: false
         }
       })
+    },
+
+    getPopular: async () => {
+      return await prisma.skill.groupBy({
+        by: ['name', 'isLearning'],
+        _count: { name: true },
+        orderBy: {
+          _count: {
+            name: 'desc'
+          },
+        },
+      });
+    },
+
+    findMatchesByUserId: async (userId: number) => {
+      const skillsToLearn = await prisma.skill.findMany({
+        where: { ownerId: userId, isLearning: true },
+      });
+    
+      const matches = await Promise.all(skillsToLearn.map(async (skill) => {
+        const teachers = await prisma.skill.findMany({
+          where: { name: skill.name, isLearning: false },
+          include: { owner: true },
+        });
+    
+        return {
+          skillName: skill.name,
+          teachers: teachers.map(t => ({
+            id: t.owner.id,
+            name: t.owner.name,
+            email: t.owner.email,
+          }))
+        };
+      }));
+    
+      return matches;
     }
+    
 }

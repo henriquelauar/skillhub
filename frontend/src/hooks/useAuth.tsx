@@ -3,8 +3,7 @@ export const getUserId = (): number | null => {
     return id ? Number(id) : null;
   };
   
-  export const logout = () => {
-    localStorage.removeItem('userId');
-    window.location.href = '/login';
-  };
-  
+export const logout = () => {
+  localStorage.removeItem('userId');
+  localStorage.removeItem('token');
+};

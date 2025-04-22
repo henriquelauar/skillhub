@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SkillHub - Início</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #121212;
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #00df9a;
+    }
+
+    header button {
+      padding: 0.5rem 1rem;
+      background-color: #e63946;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .welcome {
+      margin-bottom: 2rem;
+    }
+
+    .welcome h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      background-color: #1e1e1e;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      margin-bottom: 0.5rem;
+      color: #00df9a;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .suggestions {
+      margin-top: 2rem;
+    }
+
+    .suggestions h3 {
+      margin-bottom: 1rem;
+    }
+
+    .suggestions ul {
+      list-style: none;
+    }
+
+    .suggestions li {
+      background: #1e1e1e;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+    }
+
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>SkillHub</h1>
+    <button>Logout</button>
+  </header>
+
+  <div class="welcome">
+    <h2>Bem-vindo(a), João!</h2>
+    <p>Que tal aprender algo novo hoje ou compartilhar seu conhecimento?</p>
+  </div>
+
+  <section class="quick-actions">
+    <div class="card">
+      <h3>Meu Painel</h3>
+      <p>Gerencie suas habilidades e perfil</p>
+    </div>
+    <div class="card">
+      <h3>Adicionar Skill</h3>
+      <p>Compartilhe uma nova habilidade com a comunidade</p>
+    </div>
+    <div class="card">
+      <h3>Explorar Habilidades</h3>
+      <p>Encontre algo que você quer aprender</p>
+    </div>
+    <div class="card">
+      <h3>Buscar Usuários</h3>
+      <p>Veja quem está ensinando ou aprendendo</p>
+    </div>
+  </section>
+
+  <section class="suggestions">
+    <h3>Habilidades Populares</h3>
+    <ul>
+      <li>JavaScript - 128 usuários ensinando</li>
+      <li>Figma - 89 usuários aprendendo</li>
+      <li>Python - 142 usuários ensinando</li>
+    </ul>
+  </section>
+
+  <footer>
+    © 2025 SkillHub. Conectando conhecimento.
+  </footer>
+
+</body>
+</html>

@@ -23,6 +23,10 @@ export const SkillService = {
         return await SkillRepository.findByUserId(userId);
     },  
 
+    getSkillsByName: async (name: string) => {
+        return await SkillRepository.findByName(name);
+    },
+
     updateSkill: async (id: number, data: UpdateSkill) => {
         return await SkillRepository.update(id, data)
     },
@@ -51,5 +55,19 @@ export const SkillService = {
 
     getSkillsOwned: async (userId: number) => {
         return await SkillRepository.getSkillsOwnedByUser(userId);
+    },
+
+    getPopularSkills: async () => {
+        const groupedSkills = await SkillRepository.getPopular();
+      
+        return groupedSkills.map((skill) => ({
+          name: skill.name,
+          count: skill._count.name,
+          type: skill.isLearning ? 'aprender' : 'domino',
+        }));
+    },
+
+    getMatches: async (userId: number) => {
+        return await SkillRepository.findMatchesByUserId(userId);
     }
 }

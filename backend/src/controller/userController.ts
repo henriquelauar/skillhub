@@ -3,10 +3,10 @@ import { Request, Response } from 'express';
 import { UserService } from '../services/userService';
 
 export const UserController = {
-  create: async (req: Request, res: Response): Promise<void> => {
+  register: async (req: Request, res: Response): Promise<void> => {
     try {
       const { name, email, password } = req.body;
-      const user = await UserService.createUser(name, email, password);
+      const user = await UserService.registerUser(name, email, password);
       res.status(201).json(user);
     } catch (err: any) {
       res.status(500).json({ message: 'Erro ao criar usuário', error: err.message });
@@ -53,11 +53,11 @@ export const UserController = {
     }
   },
 
-  login: async (req: Request, res: Response): Promise<void> => {
+  login: async (req: Request, res: Response): Promise<void> => {    
     try {
       const { email, password } = req.body;
-      const user = await UserService.loginUser(email, password);
-      res.json({ user });
+      const { user, token } = await UserService.loginUser(email, password);
+      res.json({ user, token });
     } catch (err: any) {
       res.status(500).json({ message: 'Erro ao fazer login', error: err.message });
     }

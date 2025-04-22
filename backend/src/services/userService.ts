@@ -1,9 +1,11 @@
 import { UserRepository } from '../repositories/userRepository';
+import { comparePasswords, generateToken, hashPassword } from '../utils/auth';
 
 export const UserService = {
-  createUser: async (name: string, email: string, password: string) => {
-    const newUser = { name, email, password };
-    return await UserRepository.create(newUser);
+  registerUser: async (name: string, email: string, password: string) => {
+    const hashedPassword = await hashPassword(password)
+    const newUser = { name, email, password: hashedPassword };
+    return await UserRepository.register(newUser);
   },
 
   getAllUsers: async () => {
@@ -24,9 +26,14 @@ export const UserService = {
 
   loginUser: async (email: string, password: string) => {
     const user = await UserRepository.findByEmail(email);
-    if (!user || user.password !== password) {
+    if (!user || !(await comparePasswords(password, user.password))) {
       throw new Error('Email ou senha inválidos');
     }
-    return user; // Retorna o usuário, mas sem autenticação baseada em token no momento
+
+    const token = generateToken(user.id);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...userWithoutPassword } = user;
+
+    return { user: userWithoutPassword, token };
   }
 };

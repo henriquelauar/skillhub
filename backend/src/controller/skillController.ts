@@ -11,7 +11,6 @@ export const SkillController = {
     } catch (err: any) {
       if (err.message.includes('habilidade que domina')) {
         res.status(409).json({ message: err.message });
-        return;
       }
   
       res.status(500).json({ message: 'Erro ao criar skill', error: err.message });
@@ -55,6 +54,22 @@ export const SkillController = {
     } catch (err: any) {
       console.log('Erro ao buscar skills do usuário:', err);
       res.status(500).json({ message: 'Erro ao buscar skills do usuário', error: err.message });
+    }
+  },
+
+  findByName: async (req: Request, res: Response) => {
+    const { name } = req.query;
+
+    if (!name || typeof name !== 'string') {
+      res.status(400).json({ message: 'Nome da habilidade é obrigatório' });;
+      return
+    }
+  
+    try {
+      const skills = await SkillService.getSkillsByName(name);
+      res.json(skills);
+    } catch (err: any) {
+      res.status(500).json({ message: 'Erro ao buscar habilidades', error: (err as Error).message });
     }
   },
 
@@ -129,5 +144,26 @@ export const SkillController = {
     } catch (err: any) {
       res.status(500).json({ message: 'Erro ao buscar skills', error: err.message });
     }
-  }
+  },
+
+  getPopularSkills: async (req: Request, res: Response) => {
+    try {
+      const skills = await SkillService.getPopularSkills();
+      res.json(skills);
+    } catch (error) {
+      console.error('Erro ao buscar habilidades populares:', error);
+      res.status(500).json({ error: 'Erro ao buscar habilidades populares' });
+    }
+  },
+
+  getMatches: async (req: Request, res: Response) => {
+    try {
+      const userId = Number(req.params.userId);
+      const matches = await SkillService.getMatches(userId);
+      res.json(matches);
+    } catch (error) {
+      console.error('Erro ao achar matches', error);
+      res.status(500).json({ error: "erro ao achar matches"})
+    }
+  },
 };

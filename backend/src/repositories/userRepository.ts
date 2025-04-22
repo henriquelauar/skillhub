@@ -2,7 +2,7 @@ import { CreateUser, UpdateUser } from '../types/userTypes';
 import { prisma } from '../database/prisma'
 
 export const UserRepository = {
-    create: async (data: CreateUser) => {
+    register: async (data: CreateUser) => {
         return prisma.user.create({ data })
     },
     

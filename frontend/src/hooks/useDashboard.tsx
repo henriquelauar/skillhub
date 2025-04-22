@@ -1,10 +1,8 @@
-// src/hooks/useDashboard.ts
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../services/userService';
 import { getOwnedSkills, getSkillsToLearn, deleteSkill } from '../services/skillService';
 import { Skill, UserData } from '../types';
-import { getUserId, logout } from '../utils/auth';
+import { getUserId } from './useAuth';
 
 export const useDashboard = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -13,7 +11,7 @@ export const useDashboard = () => {
   const [error, setError] = useState<string | null>(null);
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
+  
   const userId = getUserId();
 
   const loadSkills = useCallback(async () => {
@@ -58,11 +56,6 @@ export const useDashboard = () => {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   return {
     userData,
     error,
@@ -72,7 +65,6 @@ export const useDashboard = () => {
     editingSkill,
     setIsModalOpen,
     setEditingSkill,
-    handleLogout,
     handleDeleteSkill,
     handleSkillAdded: loadSkills,
   };
