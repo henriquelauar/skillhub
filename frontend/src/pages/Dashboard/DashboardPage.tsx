@@ -26,7 +26,6 @@ export default function DashboardPage() {
 
   return (
     <Layout>
-      {/* Welcome Section */}
       <div className="card mb-4">
         <div className="card-body">
           <div className="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-3">
@@ -54,9 +53,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Skills Management Section */}
       <div className="row g-4">
-        {/* Skills I Teach */}
         <div className="col-12 col-lg-6">
           <div className="card h-100">
             <div className="card-header d-flex justify-content-between align-items-center bg-gradient bg-opacity-10">
@@ -101,7 +98,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Skills I Want to Learn */}
         <div className="col-12 col-lg-6">
           <div className="card h-100">
             <div className="card-header d-flex justify-content-between align-items-center bg-gradient bg-opacity-10">

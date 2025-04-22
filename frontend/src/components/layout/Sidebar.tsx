@@ -18,7 +18,6 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
 
   const menuContent = (
     <>
-      {/* Título */}
       <div className="border-bottom">
 
       <Link to="/" className="d-flex align-items-center mb-3 mb-md-4 text-decoration-none">
@@ -27,7 +26,6 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
       <p className="text-muted mb-4">Troca de habilidades</p>
       </div>
 
-      {/* Avatar + Info */}
       <div className="d-flex align-items-center mb-4 mt-3">
         <div className="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style={{ width: 48, height: 48 }}>
           {userData?.name.slice(0, 2).toUpperCase()}
@@ -38,7 +36,6 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
         </div>
       </div>
 
-      {/* Navegação */}
       <ul className="nav nav-pills flex-column mb-auto">
         <li className="nav-item">
           <Link to="/dashboard" className={`nav-link ${isActive("/dashboard") ? "active" : "text-dark"}`}>
@@ -66,7 +63,6 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
         </li>
       </ul>
 
-      {/* Sair */}
       <div className="mt-auto pt-4 border-top">
         <button onClick={handleLogout} className="btn btn-link text-decoration-none text-danger w-100 d-flex align-items-center justify-content-start gap-2">
           <FaSignOutAlt />
