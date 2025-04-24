@@ -1,4 +1,3 @@
-// components/AnimatedPage.tsx
 import { motion } from "framer-motion";
 
 const animations = {
