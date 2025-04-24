@@ -65,15 +65,6 @@ export const SkillRepository = {
           }
         });
       },   
-    
-    removeFromLearn: async (userId: number, skillId: number) => {
-      return prisma.skill.delete({
-        where: {
-          id: skillId,
-          ownerId: userId
-        }
-      })
-    },
   
     getSkillsToLearnByUser: async (userId: number) => {
       return prisma.skill.findMany({

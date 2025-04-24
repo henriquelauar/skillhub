@@ -11,7 +11,6 @@ router.get('/popular', SkillController.getPopularSkills);
 router.get('/matches/:userId', SkillController.getMatches);
 
 router.post("/to-learn/:userId", SkillController.createLearningSkill);
-router.delete("/to-learn/:userId", SkillController.removeLearningSkill);
 
 router.post("/", SkillController.create);
 router.get("/", SkillController.findAll);
@@ -36,7 +35,7 @@ export default router;
  *     tags: [Skills]
  *     parameters:
  *       - in: query
- *         name: q
+ *         name: name
  *         schema: { type: string }
  *         description: Nome parcial da habilidade
  *     responses:
@@ -148,28 +147,6 @@ router.get('/matches/:userId', SkillController.getMatches);
  *         description: Habilidade adicionada à lista de aprendizado
  */
 router.post("/to-learn/:userId", SkillController.createLearningSkill);
-
-/**
- * @swagger
- * /skills/to-learn/{userId}:
- *   delete:
- *     summary: Remove uma habilidade da lista de aprendizado do usuário
- *     tags: [Skills]
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema: { type: integer }
- *       - in: query
- *         name: name
- *         required: true
- *         schema: { type: string }
- *         description: Nome da habilidade a ser removida
- *     responses:
- *       204:
- *         description: Habilidade removida com sucesso
- */
-router.delete("/to-learn/:userId", SkillController.removeLearningSkill);
 
 /**
  * @swagger

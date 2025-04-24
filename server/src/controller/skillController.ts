@@ -76,18 +76,7 @@ export const SkillController = {
       }
     }
   },
-
-  removeLearningSkill: async (req: Request, res: Response): Promise<void> => {
-    try {
-      const userId = Number(req.params.userId);
-      const skillId = Number(req.body.skillId);
-      await SkillService.removeSkillFromLearn(userId, skillId);
-      res.status(204).send();
-    } catch (err) {
-      res.status(500).json({ message: 'Erro ao remover skill da lista de aprender', error: (err as Error).message });
-    }
-  },
-
+  
   getLearningSkills: async (req: Request, res: Response): Promise<void> => {
     const userId = Number(req.params.userId);
     const skills = await SkillService.getSkillsToLearn(userId);

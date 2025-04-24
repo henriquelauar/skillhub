@@ -59,7 +59,7 @@ router.get('/user/:userId', MatchController.getByUser);
  *       - in: path
  *         name: matchId
  *         required: true
- *         schema: { type: integer }
+ *         schema: { type: string }
  *     requestBody:
  *       content:
  *         application/json:
@@ -83,7 +83,7 @@ router.put('/:matchId/status', MatchController.updateStatus);
  *       - in: path
  *         name: matchId
  *         required: true
- *         schema: { type: integer }
+ *         schema: { type: string }
  *     responses:
  *       204:
  *         description: Match deletado

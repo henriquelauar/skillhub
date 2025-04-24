@@ -69,14 +69,6 @@
       return await SkillRepository.createLearningSkill(data);
     },
 
-    removeSkillFromLearn: async (userId: number, skillId: number) => {
-      const skill = await SkillRepository.findById(skillId);
-      if (!skill || skill.ownerId !== userId || !skill.isLearning) {
-        throw new AppError("Habilidade não encontrada para exclusão.", 404);
-      }
-      return await SkillRepository.removeFromLearn(userId, skillId);
-    },
-
     getSkillsToLearn: async (userId: number) => {
       const skills = await SkillRepository.getSkillsToLearnByUser(userId);
 
