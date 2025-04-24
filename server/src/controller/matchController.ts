@@ -4,6 +4,17 @@ import { AppError } from '../utils/appError';
 import { MatchStatus } from '@prisma/client';
 
 export const MatchController = {
+  /**
+   * Cria um novo match entre dois usuários com base em uma habilidade.
+   * 
+   * @route POST /matches
+   * @param {Request} req - Corpo da requisição contendo senderId, receiverId e skillName
+   * @param {Response} res - Retorna o match criado ou um erro
+   * 
+   * @returns {201 Created} Match criado com sucesso
+   * @throws {400 Bad Request} senderId, receiverId ou skillName ausentes
+   * @throws {500 Internal Server Error} Erro inesperado ao criar match
+   */
   create: async (req: Request, res: Response): Promise<void> => {
     try {
       const { senderId, receiverId, skillName } = req.body;
@@ -23,6 +34,16 @@ export const MatchController = {
     }
   },
 
+  /**
+   * Retorna todos os matches de um usuário (enviados e recebidos).
+   * 
+   * @route GET /matches/user/:userId
+   * @param {Request} req - Parâmetro userId na rota
+   * @param {Response} res - Retorna a lista de matches do usuário
+   * 
+   * @returns {200 OK} Lista de matches
+   * @throws {500 Internal Server Error} Erro inesperado ao buscar matches
+   */
   getByUser: async (req: Request, res: Response): Promise<void> => {
     try {
       const userId = Number(req.params.userId);
@@ -33,6 +54,17 @@ export const MatchController = {
     }
   },
 
+  /**
+   * Atualiza o status de um match (PENDENTE, ACEITO, RECUSADO).
+   * 
+   * @route PUT /matches/:matchId/status
+   * @param {Request} req - Parâmetro matchId na rota e status no body
+   * @param {Response} res - Retorna o match com status atualizado
+   * 
+   * @returns {200 OK} Match atualizado com sucesso
+   * @throws {400 Bad Request} Status inválido
+   * @throws {500 Internal Server Error} Erro inesperado ao atualizar status
+   */
   updateStatus: async (req: Request, res: Response): Promise<void> => {
     try {
       const matchId = req.params.matchId;
@@ -53,6 +85,16 @@ export const MatchController = {
     }
   },
 
+  /**
+   * Deleta um match com base no ID fornecido.
+   * 
+   * @route DELETE /matches/:matchId
+   * @param {Request} req - Parâmetro matchId na rota
+   * @param {Response} res - Retorna 204 No Content se for bem-sucedido
+   * 
+   * @returns {204 No Content} Match deletado com sucesso
+   * @throws {500 Internal Server Error} Erro inesperado ao deletar match
+   */
   delete: async (req: Request, res: Response): Promise<void> => {
     try {
       const matchId = req.params.matchId;

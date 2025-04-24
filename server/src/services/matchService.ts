@@ -4,7 +4,19 @@ import { SkillRepository } from '../repositories/skillRepository';
 import { AppError } from '../utils/appError';
 
 export const MatchService = {
-  async createMatch(senderId: number, receiverId: number, skillName: string) {
+  /**
+   * Cria um match entre um usuário que está aprendendo uma habilidade
+   * e outro que está ensinando a mesma habilidade.
+   * 
+   * @param {number} senderId - ID do usuário que está solicitando o match
+   * @param {number} receiverId - ID do usuário que receberá o match
+   * @param {string} skillName - Nome da habilidade
+   * 
+   * @returns {Promise<any>} O novo match criado
+   * 
+   * @throws {AppError} Se for o mesmo usuário, se a habilidade não for válida ou já existir um match
+   */
+  createMatch: async (senderId: number, receiverId: number, skillName: string) => {
     if (senderId === receiverId) {
       throw new AppError("Você não pode dar match com você mesmo", 400);
     }
@@ -39,15 +51,37 @@ export const MatchService = {
     return newMatch;
   },
 
-  async getMatchesByUserId(userId: number) {
+  /**
+   * Busca todos os matches relacionados a um usuário.
+   * 
+   * @param {number} userId - ID do usuário
+   * 
+   * @returns {Promise<any[]>} Lista de matches do usuário
+   */
+  getMatchesByUserId: async (userId: number) => {
     return await MatchRepository.findByUserId(userId);
   },
 
-  async updateMatchStatus(matchId: string, status: MatchStatus) {
+  /**
+   * Atualiza o status de um match (ex: de "PENDENTE" para "ACEITO").
+   * 
+   * @param {string} matchId - ID do match
+   * @param {MatchStatus} status - Novo status do match
+   * 
+   * @returns {Promise<any>} Match atualizado
+   */
+  updateMatchStatus: async (matchId: string, status: MatchStatus) => {
     return await MatchRepository.updateStatus(matchId, status);
   },
 
-  async deleteMatch(matchId: string) {
+  /**
+   * Exclui um match do sistema.
+   * 
+   * @param {string} matchId - ID do match a ser deletado
+   * 
+   * @returns {Promise<void>} Nada é retornado se a exclusão for bem-sucedida
+   */
+  deleteMatch: async (matchId: string) => {
     return await MatchRepository.delete(matchId);
   }
 };
