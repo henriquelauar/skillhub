@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Match } from '../../types';
 import UserMatchCard from '../../components/UserMatchCard';
 import { useMatchActions } from '../../hooks/useMatchActions';
+import { Link } from 'react-router-dom';
 import { getMatchesById } from '../../services/skillService';
 
 const PossibleMatches = () => {
@@ -55,9 +56,9 @@ const PossibleMatches = () => {
             <i className="bi bi-people me-2"></i>
             Possíveis Matches
           </h2>
-          <a href="/search" className="text-decoration-none small">
+          <Link to="/search" className="text-decoration-none small">
             Ver todos <i className="bi bi-chevron-right ms-1"></i>
-          </a>
+          </Link>
         </div>
         <div className="card-body">
           {loading ? (
