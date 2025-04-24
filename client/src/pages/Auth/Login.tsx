@@ -1,12 +1,14 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginUser } from '../services/userService';
+import { loginUser } from '../../services/userService';
+import { useErrorHandler } from '../../hooks/useErrorHandler';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const handleError = useErrorHandler();
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ const Login = () => {
       localStorage.setItem('token', response.token);
       navigate('/dashboard');
     } catch (err) {
-      console.log(err);
+      handleError(err);
     } finally {
       setIsLoading(false);
     }

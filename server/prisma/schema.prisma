@@ -41,10 +41,10 @@ model Match {
   id         String   @id @default(uuid())
 
   senderId   Int
-  sender     User     @relation("SenderMatches", fields: [senderId], references: [id])
+  sender     User     @relation("SenderMatches", fields: [senderId], references: [id], onDelete: Cascade)
 
   receiverId Int
-  receiver   User     @relation("ReceiverMatches", fields: [receiverId], references: [id])
+  receiver   User     @relation("ReceiverMatches", fields: [receiverId], references: [id], onDelete: Cascade)
 
   skillId    Int
   skill      Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)

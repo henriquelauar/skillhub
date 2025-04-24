@@ -1,19 +1,8 @@
-import { ReactNode, useEffect } from "react";
-import * as bs from "bootstrap";
+import { ReactNode } from "react";
 import { Sidebar } from "../layout/Sidebar";
 import Topbar from "../layout/TopBar";
 
 export default function Layout({ children, title }: { children: ReactNode; title: string }) {
-    useEffect(() => {
-    const trigger = document.getElementById("menuButton");
-    const sidebar = document.getElementById("mobileSidebar");
-
-    if (trigger && sidebar) {
-      const offcanvas = new bs.Offcanvas(sidebar);
-      trigger.addEventListener("click", () => offcanvas.toggle());
-    }
-  }, []);
-
   return (
     <div className="d-flex">
       <Sidebar />

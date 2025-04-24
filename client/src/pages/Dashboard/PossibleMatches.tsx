@@ -1,51 +1,30 @@
 import { useEffect, useMemo, useState } from 'react';
-import api from '../../services/api';
-import { Match, APIMatch } from '../../types';
-import { useErrorHandler } from '../../hooks/useErrorHandler';
+import { Match } from '../../types';
 import UserMatchCard from '../../components/UserMatchCard';
-import { createMatch } from '../../services/matchService';
-import { toast } from 'react-toastify';
+import { useMatchActions } from '../../hooks/useMatchActions';
+import { getMatchesById } from '../../services/skillService';
 
 const PossibleMatches = () => {
   const [matches, setMatches] = useState<Match[]>([]);
-  const [existingMatches, setExistingMatches] = useState<{ receiverId: number; skillName: string }[]>([]);
   const [loading, setLoading] = useState(true);
-  const handleError = useErrorHandler();
+
+  const userId = Number(localStorage.getItem('userId'));
+  const { mySkills, sendMatch, isAlreadyMatched } = useMatchActions(userId);
 
   useEffect(() => {
-    const userId = Number(localStorage.getItem('userId'));
-    if (!userId) return;
-
     const fetchData = async () => {
       try {
-        const [skillsRes, existingRes] = await Promise.all([
-          api.get(`/skills/matches/${userId}`),
-          api.get(`/matches/user/${userId}`),
-        ]);
-
-        setMatches(skillsRes.data);
-
-        const formattedExisting = existingRes.data.map((m: APIMatch) => ({
-          receiverId: m.receiverId,
-          skillName: m.skill.name,
-        }));
-        setExistingMatches(formattedExisting);
+        const res = await getMatchesById(userId);
+        setMatches(res);
       } catch (err) {
-        handleError(err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [handleError]);
-
-  const isAlreadyMatched = (receiverId: number, skillName: string) =>
-    existingMatches.some(
-      (m) =>
-        m.receiverId === receiverId &&
-        m.skillName?.toLowerCase() === skillName.toLowerCase()
-    );
+  }, [userId]);
 
   const filteredCards = useMemo(() => {
     return matches.flatMap((match) =>
@@ -58,27 +37,15 @@ const PossibleMatches = () => {
               name={teacher.name}
               email={teacher.email}
               skillName={match.skillName}
+              isLearning={false}
               isMatched={isAlreadyMatched(teacher.id, match.skillName)}
-              onMatch={async () => {
-                try {
-                  const userId = Number(localStorage.getItem("userId"));
-                  await createMatch(userId, teacher.id, match.skillName);
-                  toast.success("Match enviado com sucesso!");
-
-                  setExistingMatches((prev) => [
-                    ...prev,
-                    { receiverId: teacher.id, skillName: match.skillName },
-                  ]);
-                } catch (err) {
-                  toast.error("Erro ao enviar o match.");
-                  handleError(err);
-                }
-              }}
+              onMatch={() => sendMatch(teacher.id, match.skillName)}
+              mySkills={mySkills}
             />
           </div>
         ))
     );
-  }, [matches, existingMatches]);
+  }, [matches, isAlreadyMatched]);
 
   return (
     <div className="mt-5">
@@ -88,7 +55,7 @@ const PossibleMatches = () => {
             <i className="bi bi-people me-2"></i>
             Possíveis Matches
           </h2>
-          <a href="/explore" className="text-decoration-none small">
+          <a href="/search" className="text-decoration-none small">
             Ver todos <i className="bi bi-chevron-right ms-1"></i>
           </a>
         </div>
@@ -96,7 +63,7 @@ const PossibleMatches = () => {
           {loading ? (
             <p className="text-muted">Carregando possíveis matches...</p>
           ) : filteredCards.length > 0 ? (
-            <div className="row g-4">{filteredCards}</div>
+            <div className="row g-4">{filteredCards.slice(0,6)}</div>
           ) : (
             <p className="text-muted">Nenhum match encontrado no momento.</p>
           )}

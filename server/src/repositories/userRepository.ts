@@ -25,4 +25,24 @@ export const UserRepository = {
     delete: (id: number) => {
         return prisma.user.delete({ where: { id }})
     }, 
-}
+
+    searchUsers: async (query: string) => {
+      return prisma.user.findMany({
+        where: {
+          OR: [
+            { name: { contains: query, mode: "insensitive" } },
+            {
+              skills: {
+                some: {
+                  name: { contains: query, mode: "insensitive" },
+                }
+              }
+            }
+          ]
+        },
+        include: {
+          skills: true
+        }
+      });
+    },
+};

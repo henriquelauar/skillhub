@@ -58,5 +58,14 @@ export const UserService = {
     const token = generateToken(user.id);
     const { password: _, ...userWithoutPassword } = user;
     return { user: userWithoutPassword, token };
+  },
+
+  searchUsersByQuery: async (query: string) => {
+    if (!query || query.trim() === '') {
+      throw new AppError('A consulta não pode ser vazia');
+    } 
+
+    const users = await UserRepository.searchUsers(query.trim());
+    return users;
   }
 };

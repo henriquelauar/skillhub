@@ -1,6 +1,7 @@
 export interface Skill {
   id: number;
   name: string;
+  isLearning: boolean;
 }
 
 export interface UserData {
@@ -14,6 +15,7 @@ export interface SkillFormProps {
   skillToEdit?: Skill;
   onSkillAdded: () => void;
   onClose: () => void;
+  defaultType?: 'domino' | 'aprender';
 }
 
 export type SkillWithOwner = Skill & {
@@ -50,4 +52,11 @@ export interface APIMatch {
   skill: {
     name: string;
   };
+}
+
+export interface SearchResult {
+  userId: number;
+  name: string;
+  email: string;
+  skillName: string;
 }

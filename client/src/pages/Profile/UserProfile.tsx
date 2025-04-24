@@ -1,16 +1,18 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getUserById } from "../services/userService";
-import { getOwnedSkills } from "../services/skillService";
-import { getMatchesByUser, createMatch } from "../services/matchService";
-import Layout from "../components/layout/Layout";
-import { UserData, Match, Skill } from "../types";
+import { getUserById } from "../../services/userService";
+import { getOwnedSkills } from "../../services/skillService";
+import { getMatchesByUser, createMatch } from "../../services/matchService";
+import Layout from "../../components/layout/Layout";
+import { UserData, Match, Skill } from "../../types";
 import { toast } from "react-toastify";
+import { useErrorHandler } from "../../hooks/useErrorHandler";
 
 const UserProfile = () => {
   const { id } = useParams();
   const profileId = Number(id);
   const currentUserId = Number(localStorage.getItem("userId"));
+  const handleError = useErrorHandler();
 
   const [user, setUser] = useState<UserData | null>(null);
   const [userSkills, setUserSkills] = useState([]);
@@ -23,7 +25,7 @@ const UserProfile = () => {
       setMatchedSkills((prev) => [...prev, skillName]);
       toast.success('Match criado com sucesso')
     } catch (err) {
-      console.log(err);
+      handleError(err);
     }
   };
 
@@ -46,7 +48,7 @@ const UserProfile = () => {
           .map((m: Match) => m.skillName);
         setMatchedSkills(alreadyMatchedSkills);
       } catch (err) {
-        console.log(err)
+        handleError(err);
       } finally {
         setLoading(false);
       }

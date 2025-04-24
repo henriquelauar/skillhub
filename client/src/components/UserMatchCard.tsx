@@ -1,17 +1,21 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import AnimatedPage from "./layout/AnimatedPage";
+import { Skill } from "../types";
 
 type Props = {
   userId: number;
   name: string;
   email: string;
   skillName: string;
+  isLearning: boolean;
   isMatched?: boolean;
   onMatch?: () => void;
   status?: 'pendente' | 'enviado' | 'recebido' | 'aceito';
   onAccept?: () => void;
   onReject?: () => void;
   onCancel?: () => void;
+  mySkills?: Skill[];
 };
 
 export default function UserMatchCard({
@@ -19,12 +23,14 @@ export default function UserMatchCard({
   name,
   email,
   skillName,
+  isLearning,
   isMatched = false,
   onMatch,
   status,
   onAccept,
   onReject,
   onCancel,
+  mySkills,
 }: Props) {
   const [clicked, setClicked] = useState(false);
 
@@ -35,7 +41,15 @@ export default function UserMatchCard({
     }
   };
 
+  const matchIsPossible = mySkills?.some(
+    (s) =>
+      s.name.toLowerCase() === skillName.toLowerCase() &&
+      s.isLearning === true &&
+      isLearning === false
+  );
+
   return (
+    <AnimatedPage>
     <div className="card h-100">
       <div className="card-body">
         <div className="d-flex align-items-center mb-3">
@@ -52,11 +66,14 @@ export default function UserMatchCard({
             <p className="text-muted small mb-0">{email}</p>
           </div>
         </div>
-        <h6 className="mb-2">{skillName}</h6>
-        <p className="text-muted small mb-2">
-          Está envolvido com <strong>{skillName}</strong>.
-        </p>
-
+        <h6 className="mb-2">
+          {skillName}{" "}
+          {isLearning === true ? (
+            <span className="badge bg-warning text-dark ms-2 text-uppercase">Aprendendo</span>
+          ) : (
+            <span className="badge bg-success ms-2 text-uppercase">Ensinando</span>
+          )}
+        </h6>
         {status === 'enviado' && (
           <p className="text-muted small mb-3">Você enviou este match</p>
         )}
@@ -64,36 +81,41 @@ export default function UserMatchCard({
         {status === 'recebido' && (
           <p className="text-muted small mb-3">Você recebeu este match</p>
         )}
+
+        {status === 'aceito' && (
+          <p className="badge bg-success w-100 py-2 text-center mb-2">Match aceito 🎉</p>
+        )}
+
         <div className="d-flex gap-2 flex-wrap">
-          <Link to={`/profile/${userId}`} className="btn btn-outline-primary w-100">
+          <Link to={`/profile/${userId}`} className="btn btn-primary w-100">
             Ver perfil
           </Link>
-
-          {/* Descoberta de matches */}
-          {onMatch && !status && (
+          
+          {onMatch && !status && matchIsPossible === true && (
             <button
-              className={`btn ${clicked || isMatched ? "btn-secondary" : "btn-success"} w-100`}
-              disabled={clicked || isMatched}
+              className={`btn w-100 ${
+                isLearning ? "invisible" : clicked || isMatched ? "btn-secondary" : "btn-success"
+              }`}
+              disabled={clicked || isMatched || isLearning}
               onClick={handleClick}
             >
               {clicked || isMatched ? "Match enviado" : "Fazer match"}
             </button>
           )}
 
-          {/* Status de match existente */}
           {status === 'recebido' && (
             <>
-              <button className="btn btn-success w-50" onClick={onAccept}>
+              <button className="btn btn-success w-100" onClick={onAccept}>
                 Aceitar
               </button>
-              <button className="btn btn-danger w-50" onClick={onReject}>
+              <button className="btn btn-danger w-100" onClick={onReject}>
                 Recusar
               </button>
             </>
           )}
 
           {status === 'enviado' && (
-            <button className="btn btn-warning w-100" onClick={onCancel}>
+            <button className="btn btn-danger w-100" onClick={onCancel}>
               Cancelar match
             </button>
           )}
@@ -105,10 +127,13 @@ export default function UserMatchCard({
           )}
 
           {status === 'aceito' && (
-            <span className="badge bg-success w-100 py-2 text-center">Match aceito 🎉</span>
+            <button className="btn btn-danger w-100" onClick={onCancel}>
+              Cancelar match
+            </button>
           )}
         </div>
       </div>
     </div>
+    </AnimatedPage>
   );
 }

@@ -3,6 +3,7 @@ import SkillForm from "./SkillForm";
 import { useDashboard } from "../../hooks/useDashboard";
 import PossibleMatches from "./PossibleMatches";
 import PopularSkillsSection from "./PopularSkills";
+import { useState } from "react";
 
 export default function DashboardPage() {
   const {
@@ -15,6 +16,8 @@ export default function DashboardPage() {
     handleSkillAdded,
     loading,
   } = useDashboard();
+
+  const [modalType, setModalType] = useState<'domino' | 'aprender'>('domino');
 
   if (loading) {
     return (
@@ -91,7 +94,7 @@ export default function DashboardPage() {
             </div>
             <div className="card-footer text-center">
               <button
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {setIsModalOpen(true); setModalType('domino')}}
                 className="btn btn-outline-primary btn-sm w-100"
               >
                 <i className="bi bi-plus me-2"></i>
@@ -135,7 +138,7 @@ export default function DashboardPage() {
             </div>
             <div className="card-footer text-center">
               <button
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {setIsModalOpen(true); setModalType('aprender')}}
                 className="btn btn-outline-success btn-sm w-100"
               >
                 <i className="bi bi-plus me-2"></i>
@@ -150,34 +153,42 @@ export default function DashboardPage() {
       <PopularSkillsSection />
 
       {isModalOpen && (
-        <>
-          <div className="modal fade show d-block" tabIndex={-1} role="dialog">
-            <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Adicionar Nova Habilidade</h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => setIsModalOpen(false)}
-                  ></button>
-                </div>
-                <div className="modal-body">
-                  <SkillForm
-                    onSkillAdded={handleSkillAdded}
-                    onClose={() => setIsModalOpen(false)}
-                  />
-                </div>
+      <>
+        <div
+          className="modal fade show d-block"
+          tabIndex={-1}
+          role="dialog"
+          onClick={(e) => {
+            const dialog = document.querySelector('.modal-dialog');
+            if (dialog && !dialog.contains(e.target as Node)) {
+              setIsModalOpen(false);
+            }
+          }}
+        >
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Adicionar Nova Habilidade</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setIsModalOpen(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <SkillForm
+                  onSkillAdded={handleSkillAdded}
+                  onClose={() => setIsModalOpen(false)}
+                  defaultType={modalType}
+                />
               </div>
             </div>
           </div>
-          <div
-            className="modal-backdrop fade show"
-            style={{ zIndex: 1040 }}
-            onClick={() => setIsModalOpen(false)}
-          ></div>
-        </>
-      )}
+        </div>
+        <div className="modal-backdrop fade show" style={{ zIndex: 1040 }}></div>
+      </>
+    )}
+
     </Layout>
   );
 }

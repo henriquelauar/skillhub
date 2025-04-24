@@ -4,9 +4,9 @@ import { SkillFormProps } from '../../types';
 import { toast } from 'react-toastify';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 
-const SkillForm = ({ onSkillAdded }: SkillFormProps) => {
+const SkillForm = ({ onSkillAdded, defaultType = 'domino' }: SkillFormProps) => {
   const [skillName, setSkillName] = useState('');
-  const [skillType, setSkillType] = useState<'domino' | 'aprender'>('domino');
+  const [skillType, setSkillType] = useState<'domino' | 'aprender'>(defaultType);
   const [details, setDetails] = useState('');
   const [loading, setLoading] = useState(false);
 

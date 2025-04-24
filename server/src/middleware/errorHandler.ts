@@ -4,9 +4,9 @@ import { AppError } from '../utils/appError';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function errorHandler(err: Error, req: Request, res: Response, _next: NextFunction) {
   if (err instanceof AppError) {
-    res.status(err.statusCode).json({ message: err.message });
+    return res.status(err.statusCode).json({ message: err.message });
   }
 
   console.error(err);
-  res.status(500).json({ message: 'Erro interno do servidor' });
+  return res.status(500).json({ message: 'Erro interno do servidor' });
 }

@@ -13,7 +13,6 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
     navigate('/login');
   }
 
-
   const isActive = (path: string) => location.pathname === path;
 
   const menuContent = (
@@ -44,9 +43,9 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
           </Link>
         </li>
         <li>
-          <Link to="/explore" className={`nav-link ${isActive("/explore") ? "active" : "text-dark"}`}>
+          <Link to="/search" className={`nav-link ${isActive("/search") ? "active" : "text-dark"}`}>
             <i className="bi bi-search me-2" />
-            Explorar Skills
+            Explorar
           </Link>
         </li>
         <li>

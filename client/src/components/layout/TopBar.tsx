@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import * as bs from "bootstrap";
 import { FC } from "react";
 
 interface TopbarProps {
@@ -7,24 +5,15 @@ interface TopbarProps {
 }
 
 const Topbar: FC<TopbarProps> = ({ title }) => {
-
-  useEffect(() => {
-    const trigger = document.getElementById("menuButton");
-    const sidebar = document.getElementById("mobileSidebar");
-
-    if (trigger && sidebar) {
-      const offcanvas = new bs.Offcanvas(sidebar);
-      trigger.addEventListener("click", () => offcanvas.toggle());
-    }
-  }, []);
-
   return (
-    <div className="bg-white border-bottom shadow-sm px-3 py-3 d-flex align-items-center mb-4"
-        style={{ position: "sticky", top: 0, zIndex: 1030 }}
+    <div
+      className="bg-white border-bottom shadow-sm px-3 py-3 d-flex align-items-center mb-4"
+      style={{ position: "sticky", top: 0, zIndex: 1030 }}
     >
       <button
-        id="menuButton"
         className="btn btn-outline-primary d-md-none me-3"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#mobileSidebar"
       >
         <i className="bi bi-list fs-4" />
       </button>

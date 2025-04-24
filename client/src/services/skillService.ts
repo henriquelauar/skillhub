@@ -36,3 +36,8 @@ export const getMatches = async () => {
   const response = await api.get('/skills/matches');
   return response.data;
 }
+
+export const getMatchesById = async (userId: number) => {
+  const response = await api.get(`/skills/matches/${userId}`);
+  return response.data;
+}

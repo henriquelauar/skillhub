@@ -23,7 +23,8 @@ export const UserController = {
 
   findById: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = await UserService.getUserById(Number(req.params.id));
+      const id = Number(req.params.id);  
+      const user = await UserService.getUserById(id);
       res.json(user);
     } catch (err) {
       next(err);
@@ -56,5 +57,15 @@ export const UserController = {
     } catch (err) {
       next(err);
     }
-  }
+  },
+
+  searchUsers: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const query = String(req.query.query || "");
+      const users = await UserService.searchUsersByQuery(query);
+      res.json(users);
+    } catch (err) {
+      next(err);
+    }
+  },
 };
