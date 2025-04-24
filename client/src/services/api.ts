@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3333';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://skillhub-c76m.onrender.com';
 
 const api = axios.create({
   baseURL: API_URL,

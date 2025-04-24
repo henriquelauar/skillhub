@@ -16,9 +16,8 @@ const Register = () => {
     setIsLoading(true);
     try {
       const response = await registerUser(name, email, password);
-
-      localStorage.setItem('userId', response.data.user.id.toString());
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.id.toString());
+      localStorage.setItem('token', response.password);
       navigate('/dashboard');
     } catch (err) {
       handleError(err)
