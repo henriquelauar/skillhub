@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import routes from './routes';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './docs/swagger';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config()
@@ -21,3 +23,4 @@ app.listen(PORT, () => {
 
 app.use(routes)
 app.use(errorHandler);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import api from '../../services/api';
 import { SkillFormProps } from '../../types';
 import { toast } from 'react-toastify';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
+import { addSkill, addSkillToLearn } from '../../services/skillService';
 
 const SkillForm = ({ onSkillAdded, defaultType = 'domino' }: SkillFormProps) => {
   const [skillName, setSkillName] = useState('');
@@ -15,7 +15,7 @@ const SkillForm = ({ onSkillAdded, defaultType = 'domino' }: SkillFormProps) => 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const userId = localStorage.getItem('userId');
+    const userId = Number(localStorage.getItem('userId'));
     if (!userId) {
       toast.error('Usuário não autenticado.');
       return;
@@ -26,14 +26,14 @@ const SkillForm = ({ onSkillAdded, defaultType = 'domino' }: SkillFormProps) => 
     try {
       const data = {
         name: skillName.trim(),
-        userId: Number(userId),
+        userId: userId,
         details: details.trim(),
       };
 
       if (skillType === 'domino') {
-        await api.post('/skills', data);
+        await addSkill(userId, data.name);
       } else {
-        await api.post(`/skills/to-learn/${userId}`, data);
+        await addSkillToLearn(userId, data.name);
       }
 
       setSkillName('');

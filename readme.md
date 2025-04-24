@@ -1,6 +1,24 @@
 # 🎯 SkillMatch - Plataforma de Conexão por Habilidades
 
-SkillMatch é uma plataforma onde usuários se conectam para ensinar e aprender habilidades. O sistema sugere possíveis matches com base em interesses mútuos de aprendizado e ensino.
+Este é um projeto de matchmaking de habilidades, onde usuários podem se conectar com outras pessoas interessadas em aprender ou ensinar determinadas habilidades. Criado como estudo prático de React, TypeScript, Express e Prisma.
+
+---
+
+## 🎯 Objetivos de aprendizado
+
+O objetivo principal deste projeto foi praticar:
+
+Integração de frontend e backend com TypeScript.
+
+Utilização de hooks personalizados no React.
+
+Uso de Prisma com PostgreSQL.
+
+Criação de uma API REST com Express.
+
+Organização de pastas e tratamento de erros.
+
+Estilização com Bootstrap e animações com Framer Motion.
 
 ---
 
@@ -13,6 +31,7 @@ SkillMatch é uma plataforma onde usuários se conectam para ensinar e aprender 
 - 🍞 React-Toastify (notificações)
 - 🔄 React Router DOM
 - 🎞 Framer Motion (transições animadas)
+- 
 
 ### Backend
 - 🧩 Node.js + Express
@@ -20,6 +39,7 @@ SkillMatch é uma plataforma onde usuários se conectam para ensinar e aprender 
 - 🛠 Prisma ORM
 - 🐘 PostgreSQL
 - 🔐 Autenticação via localStorage (token JWT)
+- 📄 Swagger (documentação interativa da API)
 
 ---
 
@@ -83,6 +103,22 @@ cd client
 npm install
 npm run dev
 ```
+
+---
+
+### Como testar todas as funcionalidades
+
+Você pode usar o comando 
+```bash
+npm run seeds
+```
+para criação de 20 usuários com 10 habilidades e diferentes matches entre eles
+Depois, é só usar o comando
+```bash
+npx prisma studio
+``` 
+para conseguir visualizar o email de um desses usuários para fazer o login.
+Cada usuário é criado com a senha padrão "123456".
 
 ---
 
